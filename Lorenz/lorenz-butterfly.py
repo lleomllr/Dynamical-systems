@@ -1,7 +1,5 @@
-#%% Equations de Lorentz :
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy.integrate import odeint
+import plotly.graph_objects as go
 
 NbPasMax = 10000
 
@@ -20,31 +18,33 @@ def lorenz_gen(x0, y0, z0):
     y=y0
     z=z0
     dt = 0.01
-    while (True) :
-        yield x,y,z
-        x_point, y_point, z_point = lorenz(x,y,z)
+    while True:
+        yield x, y, z
+        x_point, y_point, z_point = lorenz(x, y, z)
         x = x + x_point * dt
         y = y + y_point * dt
         z = z + z_point * dt
 
-xs=[]
-ys=[]
-zs=[]
+xs = []
+ys = []
+zs = []
 
-position = iter(lorenz_gen(X0,Y0,Z0))
+position = iter(lorenz_gen(X0, Y0, Z0))
 
-for i in range(0,NbPasMax) :
-    x,y,z = next(position)
+for i in range(0, NbPasMax):
+    x, y, z = next(position)
     xs.append(x)
     ys.append(y)
     zs.append(z)
 
-fig=plt.figure()
-ax = plt.axes(projection='3d')
-ax.set_xlabel("x")
-ax.set_ylabel("y")
-ax.set_zlabel("z")
-ax.set_title("Lorentz")
-ax.plot(xs, ys, zs, lw=0.5)
-plt.show(); 
-plt.savefig("Lorentz-Papillon.pdf")
+fig = go.Figure(data=[go.Scatter3d(x=xs, y=ys, z=zs, mode='lines', line=dict(width=1))])
+
+fig.update_layout(
+    scene=dict(
+        xaxis_title='X',
+        yaxis_title='Y',
+        zaxis_title='Z'
+    ),
+    title='Lorenz Butterfly'
+)
+fig.show()
